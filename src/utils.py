@@ -450,6 +450,30 @@ def minimize_mask(bbox, mask, mini_shape):
     return mini_mask
 
 
+def check_zero_bb(bbox, mask):
+    count = 0
+    for i in range(mask.shape[-1]):
+        m = mask[:, :, i]
+        y1, x1, y2, x2 = bbox[i][:4]
+        m = m[y1:y2, x1:x2]
+
+        if m.size == 0:
+            skimage.io.imsave(
+                '/home/futura/PycharmProjects/Kaggle/Data_Science_Bowl_2018_Mask_RCNN/test_img/{}_0.png'.format(i),
+                mask[:, :, i])
+            count += 1
+        else:
+            skimage.io.imsave(
+                '/home/futura/PycharmProjects/Kaggle/Data_Science_Bowl_2018_Mask_RCNN/test_img/{}.png'.format(i),
+                mask[:, :, i])
+
+
+
+        print(i)
+        print(y1, x1, y2, x2)
+    print('count', count)
+
+
 def expand_mask(bbox, mini_mask, image_shape):
     """Resizes mini masks back to image size. Reverses the change
     of minimize_mask().

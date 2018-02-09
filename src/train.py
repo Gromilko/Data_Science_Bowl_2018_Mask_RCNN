@@ -20,7 +20,7 @@ print(ROOT_DIR)
 # Directory to save logs and trained model
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 
-IMAGES_DIR = r'C:\Users\Futura\PycharmProjects\Kaggle\DataScienceBowl\data\stage1_train'
+IMAGES_DIR = r'/home/futura/PycharmProjects/Kaggle/DSB_data/stage1_train'
 
 # Local path to trained weights file
 # COCO_MODEL_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
@@ -34,22 +34,26 @@ config = CellsConfig()
 
 if __name__ == "__main__":
     dataset_train = CellsDataset()
-    dataset_train.load_cells(IMAGES_DIR, config.IMAGE_SHAPE[0], config.IMAGE_SHAPE[1])
+    # dataset_train.load_cells(IMAGES_DIR, config.IMAGE_SHAPE[0], config.IMAGE_SHAPE[1])
+    dataset_train.load_cells(IMAGES_DIR)
     dataset_train.prepare()
 
     # Validation dataset
     dataset_val = CellsDataset()
-    dataset_val.load_cells(IMAGES_DIR, config.IMAGE_SHAPE[0], config.IMAGE_SHAPE[1])
+    # dataset_val.load_cells(IMAGES_DIR, config.IMAGE_SHAPE[0], config.IMAGE_SHAPE[1])
+    dataset_val.load_cells(IMAGES_DIR)
     dataset_val.prepare()
 
-    '''
     # Load and display random samples
-    image_ids = np.random.choice(dataset_train.image_ids, 5)
+    image_ids = np.random.choice(dataset_train.image_ids, 1)
+    print(image_ids)
     for image_id in image_ids:
         image = dataset_train.load_image(image_id)
         mask, class_ids = dataset_train.load_mask(image_id)
         visualize.display_top_masks(image, mask, class_ids, dataset_train.class_names)
-    '''
+
+
+
     # Create model in training mode
     model = modellib.MaskRCNN(mode="training", config=config,
                               model_dir=MODEL_DIR)
