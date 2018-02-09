@@ -11,11 +11,12 @@ class CellsConfig(Config):
     # Give the configuration a recognizable name
     NAME = "cell"
     IMAGE_MIN_DIM = 256
-    IMAGE_MAX_DIM = 256
+    IMAGE_MAX_DIM = 512
     GPU_COUNT = 1
     IMAGES_PER_GPU = 2
     USE_MINI_MASK = True
-    STEPS_PER_EPOCH = 100
+    STEPS_PER_EPOCH = 500
+    NUM_CLASSES = 1 + 1  # background + 1 class cell
 
 
 class CellsDataset(utils.Dataset):
@@ -24,7 +25,7 @@ class CellsDataset(utils.Dataset):
         self.add_class("cells", 1, "cell")
         image_ids = next(os.walk(dataset_dir))[1]
 
-        for i in image_ids[:5]:
+        for i in image_ids:
             self.add_image("cells", image_id=i,
                            # width=width, height=height,
                            path=os.path.join(dataset_dir, i, 'images', i+'.png'),

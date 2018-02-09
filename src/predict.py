@@ -61,22 +61,24 @@ original_image, image_meta, gt_class_id, gt_bbox, gt_mask =\
                            image_id, use_mini_mask=False)
 
 # Test on a random image
-image_id = random.choice(dataset_val.image_ids)
-original_image, image_meta, gt_class_id, gt_bbox, gt_mask =\
-    modellib.load_image_gt(dataset_val, inference_config,
-                           image_id, use_mini_mask=False)
 
-# log("original_image", original_image)
-# log("image_meta", image_meta)
-# log("gt_class_id", gt_class_id)
-# log("gt_bbox", gt_bbox)
-# log("gt_mask", gt_mask)
-#
-# visualize.display_instances(original_image, gt_bbox, gt_mask, gt_class_id,
-#                             dataset_val.class_names, figsize=(8, 8))
+for _ in range(10):
+    image_id = random.choice(dataset_val.image_ids)
+    original_image, image_meta, gt_class_id, gt_bbox, gt_mask =\
+        modellib.load_image_gt(dataset_val, inference_config,
+                               image_id, use_mini_mask=False)
 
-results = model.detect([original_image], verbose=1)
+    # log("original_image", original_image)
+    # log("image_meta", image_meta)
+    # log("gt_class_id", gt_class_id)
+    # log("gt_bbox", gt_bbox)
+    # log("gt_mask", gt_mask)
+    #
+    # visualize.display_instances(original_image, gt_bbox, gt_mask, gt_class_id,
+    #                             dataset_val.class_names, figsize=(8, 8))
 
-r = results[0]
-visualize.display_instances(original_image, r['rois'], r['masks'], r['class_ids'],
-                            dataset_val.class_names, r['scores'], figsize=(18, 18))
+    results = model.detect([original_image], verbose=1)
+
+    r = results[0]
+    visualize.display_instances(original_image, r['rois'], r['masks'], r['class_ids'],
+                                dataset_val.class_names, r['scores'], figsize=(18, 18))

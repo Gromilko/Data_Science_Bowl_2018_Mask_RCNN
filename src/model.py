@@ -684,11 +684,6 @@ def refine_detections(rois, probs, deltas, window, config):
     class_ids = np.argmax(probs, axis=1)
     # Class probability of the top class of each ROI
     class_scores = probs[np.arange(class_ids.shape[0]), class_ids]
-
-    print('************************************')
-    print(len(probs))
-    print('************************************')
-
     # Class-specific bounding box deltas
     deltas_specific = deltas[np.arange(deltas.shape[0]), class_ids]
     # Apply bounding box deltas
