@@ -10,11 +10,12 @@ class CellsConfig(Config):
 
     # Give the configuration a recognizable name
     NAME = "cell"
-    IMAGE_MIN_DIM = 512
-    IMAGE_MAX_DIM = 1024
+    IMAGE_MIN_DIM = 256
+    IMAGE_MAX_DIM = 256
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 1
+    IMAGES_PER_GPU = 2
     USE_MINI_MASK = True
+    STEPS_PER_EPOCH = 100
 
 
 class CellsDataset(utils.Dataset):
@@ -40,8 +41,6 @@ class CellsDataset(utils.Dataset):
                 continue
             img = skimage.io.imread(os.path.join(path_mask, mask))
             instance_masks.append(img)
-
-        # print('len(instance_masks)', len(instance_masks))
 
         masks = np.stack(instance_masks, axis=2)
         class_ids = np.ones(shape=(len(masks_names)), dtype=np.int32)
