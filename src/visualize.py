@@ -75,7 +75,7 @@ def apply_mask(image, mask, color, alpha=0.5):
 
 def display_instances(image, boxes, masks, class_ids, class_names,
                       scores=None, title="",
-                      figsize=(16, 16), ax=None):
+                      figsize=(16, 16), ax=None, return_image=False):
     """
     boxes: [num_instance, (y1, x1, y2, x2, class_id)] in image coordinates.
     masks: [height, width, num_instances]
@@ -142,9 +142,12 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             verts = np.fliplr(verts) - 1
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
-    ax.imshow(masked_image.astype(np.uint8))
-    plt.show()
-
+    if return_image:
+        return masked_image.astype(np.uint8)
+    else:
+        ax.imshow(masked_image.astype(np.uint8))
+        plt.show()
+    
 
 def draw_rois(image, rois, refined_rois, mask, class_ids, class_names, limit=10):
     """
@@ -195,7 +198,7 @@ def draw_rois(image, rois, refined_rois, mask, class_ids, class_names, limit=10)
 
             # Mask
             m = utils.unmold_mask(mask[id], rois[id]
-            [:4].astype(np.int32), image.shape)
+                                  [:4].astype(np.int32), image.shape)
             masked_image = apply_mask(masked_image, m, color)
 
     ax.imshow(masked_image)
@@ -287,7 +290,7 @@ def plot_overlaps(gt_class_ids, pred_class_ids, pred_scores,
             text = "match" if gt_class_ids[j] == pred_class_ids[i] else "wrong"
         color = ("white" if overlaps[i, j] > thresh
                  else "black" if overlaps[i, j] > 0
-        else "grey")
+                 else "grey")
         plt.text(j, i, "{:.3f}\n{}".format(overlaps[i, j], text),
                  horizontalalignment="center", verticalalignment="center",
                  fontsize=9, color=color)

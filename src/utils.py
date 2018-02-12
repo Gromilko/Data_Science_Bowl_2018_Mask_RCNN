@@ -339,10 +339,9 @@ class Dataset(object):
         # Load image
         image = skimage.io.imread(self.image_info[image_id]['path'])
         # If grayscale. Convert to RGB for consistency.
-
         if image.ndim != 3:
             image = skimage.color.gray2rgb(image)
-        # костыль, на случай если в изображении 4ый канал прозрачности
+            # костыль, на случай если в изображении 4ый канал прозрачности
         if image.shape[2] > 3:
             image = image[:, :, :3]
         return image
@@ -448,30 +447,6 @@ def minimize_mask(bbox, mask, mini_shape):
         m = scipy.misc.imresize(m.astype(float), mini_shape, interp='bilinear')
         mini_mask[:, :, i] = np.where(m >= 128, 1, 0)
     return mini_mask
-
-
-def check_zero_bb(bbox, mask):
-    count = 0
-    for i in range(mask.shape[-1]):
-        m = mask[:, :, i]
-        y1, x1, y2, x2 = bbox[i][:4]
-        m = m[y1:y2, x1:x2]
-
-        if m.size == 0:
-            skimage.io.imsave(
-                '/home/futura/PycharmProjects/Kaggle/Data_Science_Bowl_2018_Mask_RCNN/test_img/{}_0.png'.format(i),
-                mask[:, :, i])
-            count += 1
-        else:
-            skimage.io.imsave(
-                '/home/futura/PycharmProjects/Kaggle/Data_Science_Bowl_2018_Mask_RCNN/test_img/{}.png'.format(i),
-                mask[:, :, i])
-
-
-
-        print(i)
-        print(y1, x1, y2, x2)
-    print('count', count)
 
 
 def expand_mask(bbox, mini_mask, image_shape):
