@@ -16,7 +16,8 @@ import src.utils as utils
 ROOT_DIR = os.getcwd()
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 
-IMAGES_DIR = r'/home/futura/PycharmProjects/Kaggle/DSB_data/stage1_test'
+IMAGES_DIR = r'/home/futura/PycharmProjects/Kaggle/DSB_data/stage1_train'
+
 
 class InferenceConfig(CellsConfig):
     GPU_COUNT = 1
@@ -61,7 +62,12 @@ dataset_val.load_cells(IMAGES_DIR)
 dataset_val.prepare()
 
 
-for im_id in dataset_val.image_ids:
+for im_id in dataset_val.image_ids[9:10]:
+    lm = dataset_val.load_mask(im_id)
+    print(lm[0].shape)
+    m = np.sum(lm[0], -1)
+    print(m.shape)
+    skimage.io.imsave('pred_mask2.png', m)
     print(dataset_val.image_info[im_id])
     original_image = dataset_val.load_image(im_id)
 
@@ -69,26 +75,8 @@ for im_id in dataset_val.image_ids:
 
     r = results[0]
 
-    # mask = 0
-    # for i in range(gt_mask.shape[2]):
-    #     mask += gt_mask[:, :, i]
-    temp_dir = os.path.join(IMAGES_DIR, dataset_val.image_info[im_id]['id'])
-    os.mkdir(temp_dir)
-    os.mkdir(os.path.join(temp_dir, 'images'))
-    os.mkdir(os.path.join(temp_dir, 'masks'))
 
-    skimage.io.imsave(os.path.join(temp_dir, 'images/image.png'), original_image)
-
-    for i in range(r['masks'].shape[2]):
-        print(i, end=' ')
-
-        # m, bb, im_sh = r['masks'][:, :, i], r['rois'][i], original_image.shape
-        # orig_mask = utils.unmold_mask(m, bb, image_meta[1:3])
-        skimage.io.imsave(os.path.join(temp_dir, 'masks', '{}.png'.format(i)),
-            np.where(r['masks'][:, :, i] > 0, 255, 0))
-    print()
-
-    # visualize.display_instances(original_image, r['rois'], r['masks'], r['class_ids'],
-    #                                  dataset_val.class_names, r['scores'], figsize=(18, 18), return_image=False)
-    # skimage.io.imsave('/home/futura/PycharmProjects/Kaggle/Data_Science_Bowl_2018_Mask_RCNN/test_img/pred_mask.png', im)
+    im = visualize.display_instances(original_image, r['rois'], r['masks'], r['class_ids'],
+                                     dataset_val.class_names, r['scores'], figsize=(18, 18), return_image=True)
+    skimage.io.imsave('pred_im_01_2.png', im)
     # skimage.io.imsave('/home/futura/PycharmProjects/Kaggle/Data_Science_Bowl_2018_Mask_RCNN/test_img/orig_mask.png', mask)

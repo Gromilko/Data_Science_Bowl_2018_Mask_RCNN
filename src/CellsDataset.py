@@ -12,10 +12,10 @@ class CellsConfig(Config):
     NAME = "cell"
     # IMAGE_MIN_DIM = 256
     # IMAGE_MAX_DIM = 512
-    GPU_COUNT = 1
-    IMAGES_PER_GPU = 2
-    USE_MINI_MASK = True
-    STEPS_PER_EPOCH = 500
+    # GPU_COUNT = 2
+    # IMAGES_PER_GPU = 2
+    # USE_MINI_MASK = True
+    # STEPS_PER_EPOCH = 500
     NUM_CLASSES = 1 + 1  # background + 1 class cell
     DETECTION_MAX_INSTANCES = 250
 
